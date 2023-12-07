@@ -63,6 +63,38 @@ void DoubleLinkedList::addAfterNode(Node *current_node, int new_data)
         tail = temp_node;
 };
 
+void displayList(Node *node)
+{
+    Node *last;
+    if (node->prev_node==NULL) std::cout<<"NULL====>";
+
+    while (node != NULL)
+    {
+        std::cout << node->get_node_data() << "===>" ;//<< std::endl;
+        last = node;
+        node = node->next_node;
+    }
+
+    if (node==NULL) std::cout<<"NULL"<< std::endl;;
+};
+
+Edge::Edge(Vertex *new_v1, Vertex *new_v2)
+{
+    v1 = new_v1;
+    v2 = new_v2;
+    t1 = NULL;
+    t2 = NULL;
+ };
+
+~Edge::Edge()
+{
+    delete v1;
+    delete v2;
+    delete t1;
+    delete t2;
+};
+
+Triangle::Triangle(){};
 
 int main()
 {   
@@ -71,12 +103,49 @@ int main()
     Node *node3 = new Node(NULL, 2, NULL);
     Node *node4 = new Node(node1, 2, NULL);
     Node *node5 = new Node(node4, 3, node2);
+    
+
+    std::list<Node *> linked_list = {node1};
+    //addToFront
+    linked_list.push_front(node2);
+    linked_list.push_back(node3);
+    //void addAfterNode(Node *node, int new_data);
+    auto it = std::find(linked_list.begin(), linked_list.end(), node1);
+    
+    if (it != linked_list.end())
+        linked_list.insert(it, node5);
+
+    displayList(node1);
+
+    std::list <int> example{3,1,4,6,8,9,11,20};
+    auto it3 = example.begin();
+    auto pv = std::prev(it3,5);
+
+    std::cout << *it3 << std::endl;
+    std::cout << *pv << std::endl;
+
+    Vertex *v = new Vertex(0, 1, 0.5);
+    auto [a,b,c] = v->getVertex();
+    auto reverse = v->getReverseVertex();
+    std::cout << a<<" "<<b<<" "<<c<< std::endl;
+    std::cout << std::get<0>(reverse)<<" "<<std::get<1>(reverse)<<" "<<std::get<2>(reverse) << std::endl;
+    
+    std::cout << v->z << std::endl;
+
+    Vertex *v1 = new Vertex(1,1,0);
+    Vertex *v2 = new Vertex(0,1,1);
+    Vertex *v3 = new Vertex(1,0,1);
+
+    Edge *e1 = new Edge(v1, v2);
+    Edge *e2 = new Edge(v2, v3);
+    Edge *e3 = new Edge(v3, v1);
+
     /*DoubleLinkedList linked_list;
     linked_list.addToFront(10);
     linked_list.addToFront(100);
 
     linked_list.addAfterNode(50)*/
-    std::cout << "Start Linked List: " << std::endl;
+    //std::cout << "Start Linked List: " << std::endl;
 
 
     return 0;
