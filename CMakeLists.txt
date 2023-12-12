@@ -21,7 +21,7 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}/src/)
 
 #add_executable(TriGraph ${SOURCES} ${HEADERS})
 
-set(SOURCES  ${CMAKE_CURRENT_LIST_DIR}/src/vertex.cpp  ${CMAKE_CURRENT_LIST_DIR}/src/edge.cpp ${CMAKE_CURRENT_LIST_DIR}/src/triangle.cpp ${CMAKE_CURRENT_LIST_DIR}/src/linkedList.cpp)
+set(SOURCES  ${CMAKE_CURRENT_LIST_DIR}/src/vertex.cpp ${CMAKE_CURRENT_LIST_DIR}/src/edge.cpp ${CMAKE_CURRENT_LIST_DIR}/src/triangle.cpp ${CMAKE_CURRENT_LIST_DIR}/src/linkedList.cpp)
 set(HEADERS ${CMAKE_CURRENT_LIST_DIR}/include/vertex.h ${CMAKE_CURRENT_LIST_DIR}/include/edge.h ${CMAKE_CURRENT_LIST_DIR}/include/triangle.h ${CMAKE_CURRENT_LIST_DIR}/include/linkedList.h)
 
 add_executable(Vertex ${SOURCES} ${HEADERS})

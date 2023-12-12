@@ -34,74 +34,69 @@ std::tuple<float, float, float>  Vertex::getReverseVertex()
 };
 
 
-/*void displayList(Node *node)
+template <typename T>
+void displayList(Node<T> *node)
 {
-    Node *last;
+    Node<T> *last;
     if (node->prev_node==NULL) std::cout<<"NULL====>";
 
     while (node != NULL)
     {
-        std::cout <<(void *) node->get_node_data() << "===>" ;//<< std::endl;
+        std::cout << node->get_data() << "===>" ;//<< std::endl;
         last = node;
         node = node->next_node;
     }
 
-    if (node==NULL) std::cout<<"NULL"<< std::endl;;
-};*/
-
-template <typename var>
-class ListNode
-{
-public:
-    var *data;
-
-    ListNode()
-    {        
-        data = NULL;
-        prev = NULL;
-        next = NULL;
-    };
-
-    ListNode(var new_data)
-    {
-        data = &new_data;
-        std::cout << "data: "<< *data << std::endl;
-        prev = NULL;
-        next = NULL;
-    };
-
-    ListNode *prev, *next;
+    if (node==NULL) std::cout<<"NULL"<< std::endl;
 };
 
-template <typename T>
-void setData(ListNode<T> *value)
-{   
-    std::cout << "Value: "<< *value->data << std::endl;
-   
-};
-
-template <typename T>
-void setData2(T *value)
-{   
-    auto result = value;
-    std::cout << "Value: "<< *result<< std::endl;
-   
-};
 
 int main()
 {   
-    int data = 2;
-    int *data2 = &data;
+        
+    Node<int> *node0 = new Node<int> (6);
+    Node<int> *node1 = new Node<int> (7);
+    Node<int> *node2 = new Node<int> (node0, 5, node1);
+    Node<int> *node3 = new Node<int> (node1, 10, NULL);
+    Node<int> *node4 = new Node<int> (node3, 11, NULL);
 
-    std::cout << "data: " <<data<< std::endl;
-    std::cout << "data: " <<data2<< std::endl;
-    std::cout << "data2: " <<*data2<< std::endl;
+    displayList(node1->get_prev());
     
-    float a = 10;
-    ListNode<float> node2(10);
-    ListNode<int> *node3 = new ListNode<int> (5);
+    std::cout<<"PREV: "<<node0->get_prev()<< std::endl;
+    std::cout<<"NEXT: "<<node0->get_next()<< std::endl;
+    std::cout<<"DATA: "<<node0->get_data()<< std::endl;
 
-    setData(&node2);
+    Node<int> *node5 = new Node<int> (4);
+    Node<int> *node6 = new Node<int> (9);
+    std::list<Node<int>*> my_list = {};
+    my_list.push_front(NULL);
+    my_list.push_front(node5);
+    my_list.push_back(node6);
+    auto l_front = my_list.begin();
+    //std::advance(l_front, 1);
+    auto nx = std::next(l_front, 2);
+
+    //std::cout << "l_front: " <<(*l_front)->get_data() <<std::endl; ->get_data()
+    std::cout << "nx: " <<(*nx) <<std::endl;
+
+    std::list<int> my_list2 = {-1};
+    auto l_front2 = my_list2.begin();
+    std::cout << "l_front2: " <<*l_front2 <<std::endl;
+    std::cout << "size: " <<my_list2.size() <<std::endl;
+    //my_list2.
+
+    LinkedList<int> list1;
+    LinkedList<int> list2(3);
+    list2.addToHead(1);
+    list2.addToHead(10);
+    list2.addToHead(9);
+    list2.addToTail(14);
+    list2.printList();
+
+    
+
+
+    /*setData(&node2);
     setData(node3);
 
     delete node3;
@@ -112,11 +107,11 @@ int main()
     setData2(&contain);
     setData2(&contain2);
 
-    ListNode<int> *node0 = new ListNode<int> ();
-    ListNode<int> *node1 = new ListNode<int> (12);
+    Node<int> *node0 = new Node<int> ();
+    Node<int> *node1 = new Node<int> (12);
 
 
-    std::list<ListNode<int> *> linked_list = {};
+    std::list<Node<int> *> linked_list = {};
     linked_list.push_front(node0);
     linked_list.push_front(node1);
     linked_list.push_front(node0);
@@ -135,7 +130,7 @@ int main()
 
     std::cout << *it3 << std::endl;
     std::cout << *pv << std::endl;
-    std::cout << *pv2 << std::endl;
+    std::cout << *pv2 << std::endl;*/
 
 
     return 0;

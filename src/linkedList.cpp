@@ -1,6 +1,6 @@
 #include <linkedList.h>
 
-Node::Node()
+/*Node::Node()
 {
     prev_node = NULL;
     next_node = NULL;
@@ -23,7 +23,7 @@ Node::Node(Node *p, void *data, Node *n)
         std::cout << p->next_node << std::endl;
     }
     if (n != NULL) n->prev_node = this;    
-};
+};*/
 
 /*DoubleLinkedList::DoubleLinkedList()
 {
@@ -122,3 +122,98 @@ int main()
 
     return 0;
 }*/
+
+template<typename var>
+Node<var>::Node() : data(-1), prev_node(NULL), next_node(NULL)
+{
+    
+};
+
+template <typename var>
+Node<var>::Node(var new_data) : data(new_data), prev_node(NULL), next_node(NULL)
+{       
+
+};
+
+template<typename var>
+Node<var>::Node(Node *p, var new_data, Node *n) : data(new_data), prev_node(p), next_node(n)
+{    
+    if (prev_node != NULL) prev_node->next_node = this;   
+    if (next_node != NULL) next_node->prev_node = this;
+};
+
+template<typename var>
+Node<var>::~Node()
+{
+    if (prev_node != NULL) prev_node->next_node = next_node;
+    if (next_node != NULL) next_node->prev_node = prev_node;
+};
+
+template<typename var>
+var Node<var>::get_data()
+{   
+    return data;
+};
+
+template<typename var>
+Node<var> * Node<var>::get_prev()
+{
+    return prev_node;
+};
+
+template<typename var>
+Node<var> * Node<var>::get_next()
+{
+    return next_node;
+};
+
+template<typename var>
+LinkedList<var>::LinkedList() : head(NULL), tail(NULL), length_of_list(0), list({})
+{
+    std::cout << "Make empty list, length_of_list=" <<length_of_list <<std::endl;
+};
+
+template<typename var>
+LinkedList<var>::LinkedList(var data) : length_of_list(1), list({-1, data,-1})
+{
+    head = tail = new Node<var> (data);
+    std::cout << "Make one-element list, length_of_list=" <<length_of_list<<std::endl;
+};
+
+template<typename var>
+void LinkedList<var>::addToHead(var new_node)
+{
+    auto it = list.begin();
+    ++it;
+    list.insert(it, new_node); 
+    ++length_of_list;   
+};
+
+template<typename var>
+void LinkedList<var>::addToTail(var new_node)
+{
+    auto it = list.end();
+    --it;
+    list.insert(it, new_node); 
+    ++length_of_list; 
+};
+
+template<typename var>
+void LinkedList<var>::printList()
+{
+    std::cout << "len=" <<length_of_list<<std::endl;
+    std::cout << "mylist contains:";
+    for (auto it=list.begin(); it!=list.end(); ++it)
+        std::cout << ' ' << *it;
+    std::cout << '\n';
+};
+
+
+//Destructor
+template<typename var>
+LinkedList<var>::~LinkedList(){};
+
+template class Node<int>;
+template class Node<float>;
+template class LinkedList<int>;
+template class LinkedList<float>;
