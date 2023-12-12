@@ -1,2 +1,6 @@
-#include <edge.h>
 #include <triangle.h>
+
+Triangle::Triangle()
+{
+    
+};

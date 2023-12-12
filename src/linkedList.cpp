@@ -6,14 +6,14 @@ Node::Node()
     next_node = NULL;
 };
 
-Node::Node(int data)
+Node::Node(void *data)
 {
-    node_data = data;
+    node_data = (void *)data;
     prev_node = NULL;
     next_node = NULL;
 };
 
-Node::Node(Node *p, int data, Node *n)
+Node::Node(Node *p, void *data, Node *n)
 {
     node_data = data;
 
@@ -25,14 +25,14 @@ Node::Node(Node *p, int data, Node *n)
     if (n != NULL) n->prev_node = this;    
 };
 
-DoubleLinkedList::DoubleLinkedList()
+/*DoubleLinkedList::DoubleLinkedList()
 {
     head = NULL;
     tail = NULL;
     length_of_list = 0;
 };
 
-void DoubleLinkedList::addToFront(int new_data)
+void DoubleLinkedList::addToFront(void new_data)
 {
     Node *temp_node = new Node();
     temp_node->node_data = new_data;
@@ -63,38 +63,10 @@ void DoubleLinkedList::addAfterNode(Node *current_node, int new_data)
         tail = temp_node;
 };
 
-void displayList(Node *node)
-{
-    Node *last;
-    if (node->prev_node==NULL) std::cout<<"NULL====>";
 
-    while (node != NULL)
-    {
-        std::cout << node->get_node_data() << "===>" ;//<< std::endl;
-        last = node;
-        node = node->next_node;
-    }
 
-    if (node==NULL) std::cout<<"NULL"<< std::endl;;
-};
 
-Edge::Edge(Vertex *new_v1, Vertex *new_v2)
-{
-    v1 = new_v1;
-    v2 = new_v2;
-    t1 = NULL;
-    t2 = NULL;
- };
-
-~Edge::Edge()
-{
-    delete v1;
-    delete v2;
-    delete t1;
-    delete t2;
-};
-
-Triangle::Triangle(){};
+/*
 
 int main()
 {   
@@ -146,7 +118,7 @@ int main()
 
     linked_list.addAfterNode(50)*/
     //std::cout << "Start Linked List: " << std::endl;
-
+/*
 
     return 0;
-}
+}*/
