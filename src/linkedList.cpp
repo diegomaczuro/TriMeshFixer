@@ -1,71 +1,5 @@
 #include <linkedList.h>
 
-/*Node::Node()
-{
-    prev_node = NULL;
-    next_node = NULL;
-};
-
-Node::Node(void *data)
-{
-    node_data = (void *)data;
-    prev_node = NULL;
-    next_node = NULL;
-};
-
-Node::Node(Node *p, void *data, Node *n)
-{
-    node_data = data;
-
-    if (p != NULL) 
-    {
-        p->next_node = this;
-        std::cout << p->next_node << std::endl;
-    }
-    if (n != NULL) n->prev_node = this;    
-};*/
-
-/*DoubleLinkedList::DoubleLinkedList()
-{
-    head = NULL;
-    tail = NULL;
-    length_of_list = 0;
-};
-
-void DoubleLinkedList::addToFront(void new_data)
-{
-    Node *temp_node = new Node();
-    temp_node->node_data = new_data;
-    temp_node->prev_node = NULL;
-    temp_node->next_node = head;
-
-    if (head == NULL)
-        tail = temp_node;
-    else
-        head->prev_node = temp_node;
-
-    head = temp_node;
-};
-
-void DoubleLinkedList::addAfterNode(Node *current_node, int new_data)
-{
-    Node *temp_node = new Node();
-    temp_node->node_data = new_data;
-    temp_node->prev_node = current_node;
-    temp_node->next_node = current_node->next_node;
-    //my addition
-    if (current_node->next_node != NULL)
-        current_node->next_node->prev_node = temp_node;
-
-    current_node->next_node = temp_node;
-
-    if (current_node->next_node == NULL)
-        tail = temp_node;
-};
-
-
-
-
 /*
 
 int main()
@@ -168,34 +102,53 @@ Node<var> * Node<var>::get_next()
 };
 
 template<typename var>
-LinkedList<var>::LinkedList() : head(NULL), tail(NULL), length_of_list(0), list({})
-{
-    std::cout << "Make empty list, length_of_list=" <<length_of_list <<std::endl;
+LinkedList<var>::LinkedList() : head(NULL), tail(NULL), length_of_list(0)
+{    
+    this->list.push_front(nullptr);
+    this->list.push_front(nullptr);
+    //std::cout << "Make empty list, length_of_list=" <<length_of_list <<std::endl;
 };
 
 template<typename var>
-LinkedList<var>::LinkedList(var data) : length_of_list(1), list({-1, data,-1})
-{
-    head = tail = new Node<var> (data);
-    std::cout << "Make one-element list, length_of_list=" <<length_of_list<<std::endl;
+LinkedList<var>::LinkedList(std::shared_ptr<var> data) : length_of_list(1)//, list({&-1, &data,&-1})
+{    
+    this->list.push_front(nullptr);
+    this->list.push_front(data);
+    this->list.push_front(nullptr);
+    //std::cout << "Make one-element list, length_of_list=" <<length_of_list<<std::endl;
 };
 
 template<typename var>
-void LinkedList<var>::addToHead(var new_node)
+void LinkedList<var>::addToHead(std::shared_ptr<var> new_node)
 {
     auto it = list.begin();
-    ++it;
+    it++;
     list.insert(it, new_node); 
-    ++length_of_list;   
+    length_of_list++;   
 };
 
 template<typename var>
-void LinkedList<var>::addToTail(var new_node)
+void LinkedList<var>::addToTail(std::shared_ptr<var> new_node)
 {
     auto it = list.end();
-    --it;
+    it--;
     list.insert(it, new_node); 
-    ++length_of_list; 
+    length_of_list++; 
+};
+
+template<typename var>
+void LinkedList<var>::insertAfter(std::shared_ptr<var> node, var new_data)
+{
+    auto it = std::find(list.begin(), list.end(), node);    
+    std::shared_ptr<var> temp_ptr = std::make_shared<var> (new_data);
+    
+    if (it != list.end()) 
+    {
+        it++;
+        list.insert(it, temp_ptr);
+        length_of_list++;
+    }
+    else LinkedList<var>::addToHead(temp_ptr);    
 };
 
 template<typename var>
@@ -203,12 +156,273 @@ void LinkedList<var>::printList()
 {
     std::cout << "len=" <<length_of_list<<std::endl;
     std::cout << "mylist contains:";
+
     for (auto it=list.begin(); it!=list.end(); ++it)
-        std::cout << ' ' << *it;
+        if (*it!= nullptr) std::cout << ' ' << **it;
+    else std::cout << " NULL " ;
     std::cout << '\n';
 };
 
+template<typename var>
+std::shared_ptr<var> LinkedList<var>::get_head()
+{
+    auto it = list.begin();
+    
+    if (length_of_list == 0) return nullptr;
+    else
+    {
+        std::advance(it, 1);        
+        return *it;
+    }
+};
 
+template<typename var>
+std::shared_ptr<var> LinkedList<var>::get_tail()
+{
+    auto it = list.end();
+    if (length_of_list == 0) return nullptr;
+    else
+    {
+        std::advance(it, -2);        
+        return *it;
+    }
+};
+
+template<typename var>
+std::shared_ptr<var> LinkedList<var>::prev_node(std::shared_ptr<var> node)
+{
+    auto it = std::find(list.begin(), list.end(), node);  
+    if (node != nullptr) 
+    {
+        std::advance(it, -1);        
+        return *it;
+    }      
+    else return nullptr;
+};
+
+template<typename var>
+std::shared_ptr<var> LinkedList<var>::next_node(std::shared_ptr<var> node)
+{
+    auto it = std::find(list.begin(), list.end(), node); 
+
+    if (node != nullptr && it != list.end())
+    {
+        std::advance(it, 1);        
+        return *it;
+    }
+    else return nullptr;  
+};
+
+template<typename var>
+int LinkedList<var>::removeNode(int node_index)
+{       
+    int node_i = node_index;
+
+    if (node_index < 0) 
+        if (abs(node_index) > length_of_list) node_i = abs(node_index);
+        else node_i = node_index+length_of_list;
+     
+    if (node_i + 1 <= length_of_list)
+    {   
+        auto it = list.begin();         
+        int index_i = 0;        
+
+        while(index_i < node_i)
+        {            
+            index_i++;
+        }
+
+        std::advance(it, index_i+1); 
+        auto element_for_delete = *it;
+        list.remove(element_for_delete); 
+        length_of_list--;
+        std::cout << "node_index it: " <<**it <<", index_i=" <<index_i<< std::endl;
+        return index_i;
+    }
+    else return 0;
+};
+
+template<typename var>
+int LinkedList<var>::removeNode(std::shared_ptr<var> node)
+{
+    auto it = list.begin(); 
+    it++;
+    int node_i = 0;
+
+    while (*it != NULL && *it != node)
+    {        
+        node_i++;        
+        it++;
+    }
+    
+    if (*it != nullptr)
+    {
+        list.remove(node);
+        length_of_list--;         
+        return node_i;
+    }
+    return 0;
+};
+
+template<typename var>
+void LinkedList<var>::popHead()
+{   
+    if (length_of_list != 0)
+    {        
+        list.pop_front();
+        list.pop_front();
+        list.push_front(nullptr);   
+        length_of_list--;      
+    }
+};
+
+template<typename var>
+void LinkedList<var>::popTail()
+{
+    if (length_of_list != 0)
+    {
+        list.pop_back();
+        list.pop_back();
+        list.push_back(nullptr);   
+        length_of_list--; 
+    }
+};
+
+template<typename var>
+void LinkedList<var>::appendHeadList(LinkedList *inserted_list)
+{   
+    auto it = inserted_list->list.begin();
+    int len_of_inserted = inserted_list->length_of_list;
+    auto current_it = list.begin();
+    current_it++;
+
+    if (len_of_inserted > 0)
+    {   
+        for (int i=0; i < len_of_inserted; i++)
+        {
+            it++;            
+            list.insert(current_it, *it);
+            length_of_list++; 
+        }        
+    }       
+};
+
+template<typename var>
+void LinkedList<var>::appendTailList(LinkedList *inserted_list)
+{
+    auto it = inserted_list->list.begin();
+    int len_of_inserted = inserted_list->length_of_list;
+    auto current_it = list.end();
+    current_it--;
+
+    if (len_of_inserted > 0)
+    {   
+        for (int i=0; i < len_of_inserted; i++)
+        {
+            it++;            
+            list.insert(current_it, *it);
+            length_of_list++; 
+        }        
+    }     
+};
+
+template<typename var>
+void LinkedList<var>::moveNodeToTail(std::shared_ptr<var> node, LinkedList *external_list)
+{
+    LinkedList<var>::removeNode(node);
+    external_list->addToTail(node);
+};
+
+template<typename var>
+std::shared_ptr<var> LinkedList<var>::getNodeByValue(std::shared_ptr<var> value)
+{    
+    auto it = list.begin();
+    it++;
+    int counter = 0;
+
+    if (*it != NULL) 
+    {   
+        while ((counter < length_of_list) && (**it != *value))    
+        {            
+            it++;
+            counter++;
+        }        
+        return *it;        
+    }
+    else 
+        return NULL;
+};
+
+template<typename var>
+std::shared_ptr<var> LinkedList<var>::getNodeByIndex(int node_index)
+{
+    if (length_of_list == 0 || node_index+1 > length_of_list) 
+        return nullptr;
+    else 
+    {
+        auto it = list.begin();
+        it++;
+        int counter = 0;
+        int node_i = node_index;
+
+        if (node_index < 0) 
+            if (abs(node_index) > length_of_list) node_i = abs(node_index);
+            else node_i = node_index+length_of_list;        
+
+        if (node_i < length_of_list)
+        {
+            while (counter < node_i)
+            {                   
+                counter++;
+                it++;
+            }
+            
+            return *it;
+        }
+        else
+            return nullptr;
+    }
+};
+
+template<typename var>
+std::shared_ptr<var> LinkedList<var>::replaceNode(std::shared_ptr<var> old_node, 
+                                                  std::shared_ptr<var> new_node)
+{    
+    if (old_node != nullptr && new_node != nullptr)
+    {
+        std::replace(list.begin(), list.end(), old_node, new_node);
+    }
+    return new_node;
+};
+
+template<typename var>
+void LinkedList<var>::removeNodes()
+{
+    if (length_of_list != 0)
+    {
+        length_of_list = 0;
+        list.clear();
+        list.push_front(nullptr);
+        list.push_front(nullptr);
+    }
+};
+
+
+template<typename var>
+bool sort_function (std::shared_ptr<var> i,std::shared_ptr<var> j) { return (*i<*j); }
+
+template<typename var>
+int LinkedList<var>::sort()
+{      
+    if (length_of_list == 0) return 1;
+    else
+        list.pop_front();
+        list.pop_back();
+        list.sort(sort_function<var>);
+        list.push_front(nullptr);
+        list.push_back(nullptr);      
+        return 0; 
+};
 //Destructor
 template<typename var>
 LinkedList<var>::~LinkedList(){};
@@ -217,3 +431,5 @@ template class Node<int>;
 template class Node<float>;
 template class LinkedList<int>;
 template class LinkedList<float>;
+template class LinkedList<std::shared_ptr<int>>;
+template class LinkedList<std::shared_ptr<float>>;

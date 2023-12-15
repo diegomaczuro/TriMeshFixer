@@ -6,6 +6,8 @@
 #include <vector>
 #include <list>
 #include <algorithm>
+#include <memory>
+#include <cstdlib>
 
 template <typename var>
 class Node
@@ -31,53 +33,50 @@ template <typename var>
 class LinkedList
 {
 public:
-    Node<var> *head;
-    Node<var> *tail;
+    std::shared_ptr<var> *head;
+    std::shared_ptr<var> *tail;
     int length_of_list;
-    std::list<var> list;
+    std::list<std::shared_ptr<var>> list;
 
     // Constructor: head and tail is linked to NULL
     LinkedList();
-    LinkedList(var data);
+    LinkedList(std::shared_ptr<var> data);
 
     ~LinkedList();
     //add_front: Adds a new node in the beginning of list
-    Node<var> *get_head();
-    Node<var> *get_tail();
+    std::shared_ptr<var> get_head(); // Works like O(1)
+    std::shared_ptr<var> get_tail(); // Works like O(1)
+    // Works not correct if list = {NULL, 14, 9, 2, 9, 10 NULL}, prev_node(9) -> 14    
+    std::shared_ptr<var> prev_node(std::shared_ptr<var> node); // Works like O(length_of_list+1), rewrite like O(1)
+    std::shared_ptr<var> next_node(std::shared_ptr<var> node);
+   
+    int lenList(){return length_of_list;}  // Works like O(1)
+    void addToHead(std::shared_ptr<var> new_node);  // Works like O(1)
+    void addToTail(std::shared_ptr<var> new_node);  // Works like O(1)
+    void insertAfter(std::shared_ptr<var> node, var new_data);  // Works like O(length_of_list)
 
-    int lenList(){return length_of_list;}
+    int removeNode(int node_index); // Works like O(length_of_list) Try to use  list1.erase(it);
+    int removeNode(std::shared_ptr<var> node); // Works like O(length_of_list)
+    void appendHeadList(LinkedList *inserted_list); // Works like O(len(inserted_list))
+    void appendTailList(LinkedList *inserted_list); // Works like O(len(inserted_list))
+    void moveNodeToTail(std::shared_ptr<var> node, LinkedList *external_list); // Works like O(length_of_list)
 
-    void addToHead(var new_node);
-    void addToTail(var new_node);
-    void insertAfter(Node<var> node, var data);
-    int removeNode(int i);
-    int removeNode(Node<var> *node);
-    Node<var> *getNode();
-
-    void appendHeadList(LinkedList *list);
-    void appendTailList(LinkedList *list);
-    void moveNodeToTail(Node<var> node, LinkedList *list);
-
-    void popTail();
-    void popHead();
-    ////?????????????? freeNodes()
-    Node<var> getNodeByValue(var value);
-    void removeNodes();
-
+    void popHead(); // Works like O(3)
+    void popTail(); // Works like O(3)
     void printList();
+    
+    ////?????????????? freeNodes()
+    std::shared_ptr<var> getNodeByValue(std::shared_ptr<var> value); // Works like O(length_of_list)
+    std::shared_ptr<var> getNodeByIndex(int node_index); // Works like O(length_of_list)
+    std::shared_ptr<var> replaceNode(std::shared_ptr<var> old_node, // Works like O(length_of_list)
+                                     std::shared_ptr<var> new_node);
+    void removeNodes(); // Works like O(length_of_list)
+    int sort(); // Works like O(NlogN+2) 
 
-
-
-
-
-    //add_after: Adds a new node after another node
-    //void addAfterNode(Node<var> *node, int new_data);
-    //add_before: Adds a new node before another node
-    //add_end: Adds a new node in the end of list
-    //delete: Removes the node
     //forward_traverse: Traverse the list in forward direction
     //backward_traverse: Traverse the list in backward direction
-
+//private:
+    
 };
 
 #endif

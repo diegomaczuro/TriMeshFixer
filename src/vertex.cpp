@@ -7,6 +7,9 @@
 #include <vertex.h>
 #include <edge.h>
 #include <linkedList.h>
+#include <memory>
+
+#include <cassert>
 
 Vertex::Vertex(float new_x, float new_y, float new_z)
 {
@@ -50,6 +53,15 @@ void displayList(Node<T> *node)
     if (node==NULL) std::cout<<"NULL"<< std::endl;
 };
 
+template<typename T>
+void my_finction_for_ptr(std::shared_ptr<T> my_ptr)
+{
+    auto value = *my_ptr;
+    std::cout << "my_finction_for_ptr: " <<my_ptr<<", value: "<<value <<  std::endl;
+};
+
+template<typename var>
+bool myfunction (std::shared_ptr<var> i,std::shared_ptr<var> j) { return (*i<*j); }
 
 int main()
 {   
@@ -79,19 +91,94 @@ int main()
     //std::cout << "l_front: " <<(*l_front)->get_data() <<std::endl; ->get_data()
     std::cout << "nx: " <<(*nx) <<std::endl;
 
-    std::list<int> my_list2 = {-1};
-    auto l_front2 = my_list2.begin();
-    std::cout << "l_front2: " <<*l_front2 <<std::endl;
-    std::cout << "size: " <<my_list2.size() <<std::endl;
-    //my_list2.
+    for (int i=0; i < 5; i++)
+    {
+        int *node_ptr = new int (i);
+        std::shared_ptr<int> my_ptr = std::make_shared<int> (i);
+        //std::cout << "node_ptr: " <<node_ptr<<", value: "<<*node_ptr <<  std::endl;
+        std::cout << "node_ptr: " <<my_ptr<<", value: "<<*my_ptr <<  std::endl;
+        my_finction_for_ptr(my_ptr);
+    }
 
-    LinkedList<int> list1;
-    LinkedList<int> list2(3);
-    list2.addToHead(1);
-    list2.addToHead(10);
-    list2.addToHead(9);
-    list2.addToTail(14);
-    list2.printList();
+    
+    
+
+
+    
+    //int node_1 = 1;
+    //int *node_1_ptr = &node_1;
+    //std::cout << "node_1: " <<*node_1_ptr <<  std::endl;
+
+    std::shared_ptr<int> node_ptr1 = std::make_shared<int> (1);
+    std::shared_ptr<int> node_ptr2 = std::make_shared<int> (10);
+    std::shared_ptr<int> node_ptr3 = std::make_shared<int> (9);
+    std::shared_ptr<int> node_ptr4 = std::make_shared<int> (14);
+    std::shared_ptr<int> node_ptr5 = std::make_shared<int> (5);
+    // List1
+    LinkedList<int> *list2 = new LinkedList<int> (node_ptr1);
+    list2->addToHead(node_ptr2);
+    list2->addToHead(node_ptr3);
+    list2->addToHead(node_ptr3);
+    list2->addToHead(node_ptr4);
+    //list2->printList();
+    list2->addToTail(node_ptr5);
+    list2->insertAfter(node_ptr3, 2);
+    list2->printList();
+    // List2
+    LinkedList<int> list1(node_ptr5);
+    //list1.printList();
+    list1.insertAfter(node_ptr5, 2);
+    list1.addToHead(node_ptr4);
+    list1.addToHead(node_ptr3);
+    //list1.insertAfter(node_ptr5, 3);
+    //list1.insertAfter(node_ptr5, 5);
+    //list1.insertAfter(node_ptr5, 6);
+    //list2.printList();
+    std::shared_ptr<int> new_ptr = std::make_shared<int> (-12);
+    list1.printList();
+    list1.getNodeByValue(node_ptr3);
+    list1.replaceNode(node_ptr5, new_ptr);
+    list1.addToHead(new_ptr);
+    list1.printList();
+    //list1.removeNodes();
+    //list1.printList();
+    list1.sort();
+    list1.printList();
+
+
+
+    //list1.getNodeByIndex(12);
+    //list1.appendTailList(list2);
+    //list1.printList();
+
+    //list1.moveNodeToTail(node_ptr5, list2);
+    //list1.moveNodeToTail(node_ptr4, list2);
+    //list1.printList();
+    //list2->printList();
+    /*auto head = list1.get_head();
+    auto tail = list1.get_tail();
+    std::cout << "head: " <<*head << ", tail: " <<*tail  << std::endl;
+
+    auto head2 = list2.get_head();
+    auto tail2 = list2.get_tail();
+    std::cout << "head: " <<*head2 << ", tail: " <<*tail2  << std::endl;
+
+    auto prev = list2.prev_node(node_ptr2);
+    std::cout << "prev_node: " <<*prev << std::endl;
+    auto next = list2.next_node(node_ptr4);
+    std::cout << "next_node: " <<*next << std::endl;*/
+    //list1.removeNode(node_ptr5);
+    //list1.printList();
+
+
+    /*int *my_var;
+    int value = 100;
+    my_var = &value;
+    auto my_var2 = my_var;
+    std::cout << "Start Linked List: " <<my_var << std::endl;
+    std::cout << "Start Linked List: " <<my_var2 << value << std::endl;
+    value = 5;
+    std::cout << "Start Linked List: " <<my_var2 << value << std::endl;*/
 
     
 
